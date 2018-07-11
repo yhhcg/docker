@@ -17,37 +17,63 @@ docker save
  docker load
  ```
 
-
 **定制镜像**
 
-dockerfile -> image
+dockerfile ---> image
+
 ``` sh
 docker build -t name .  // . 为执行上下文
 ```
 
 过程：
-- From nginx：                     image1
-- RUN yarn && yarn run build:dev： image2
+
+- From nginx ---> image1
+- MAINTAINER yhhcg ---> image2
 - .
 - .
 - .
-- hello-world：                    image10
+- hello-world ---> image10
 
-image1 ~ image10为中间镜像，image10也为最终的镜像
-中间镜像不可见，由docker维护，存于缓存，下次build不需要重新创建，可复用镜像
-没执行一行命令去判断是重新创建中间镜像还是使用缓存中的镜像：
-1. 检查前一步是否是恢复出来的
-2. 本行代码在images中存在
+Features：
 
+1. 中间镜像不可见，由docker维护
+2. 存于缓存，可复用
 
-##### Nginx
+# Demo
+
+##### [1. Nginx](https://github.com/yhhcg/docker-base-images/tree/master/nginx "Nginx")
+
+**启动nginx**
+
+- 定制镜像
+
+``` sh
+docker build -t nginx .
+```
+
+- 启动镜像
+
+``` sh
+docker run -d -p 8081:80 nginx
+```
 
 **查看nginx镜像默认配置**
+
 - 创建并进入容器
+
 ```  sh
 docker run -it nginx bin/bash
 ```
+
 - 查看配置
+
 ``` sh
 cat etc/nginx/nginx.conf
+```
+###### [2. Docker-compose](https://github.com/yhhcg/docker-base-images/tree/master/dockerCompose "Docker-compose")
+
+可定义镜像的先后依赖关系
+
+``` sh
+docker-compose up
 ```
